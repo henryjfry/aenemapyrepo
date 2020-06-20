@@ -8,15 +8,16 @@ import sys,pkgutil,re,json,urllib,urlparse,random,datetime,time,os,xbmc
 from resources.lib.modules import control
 from resources.lib.modules.log_utils import debug
 from resources.lib.api import debrid
+
 control.moderator()
 
 class sources:
+    
     def __init__(self):
         self.sources = []
         self.matchTitle = control.setting('scraper.matchtitle')
 		
-    def play(self, title, year, imdb, tvdb, season, episode, tvshowtitle, premiered, meta):
-
+    def play(self, title, year, imdb, tvdb, season, episode, tvshowtitle, premiered, meta, clearlogo):
             url = None
             debug('PLAY ITEM:', title)
 			
@@ -25,7 +26,7 @@ class sources:
             if tvshowtitle == None: 
 				season = None
 				episode = None
-						
+					
             url, id = debrid.scrapecloud(title, year=year, season=season, episode=episode)
 			
 
@@ -36,10 +37,11 @@ class sources:
             except: pass
 
             from resources.lib.modules.player import player
-            player().run(title, year, season, episode, imdb, tvdb, url, meta, id)
+            player().run(title, year, season, episode, imdb, tvdb, url, meta, id, clearlogo)
+#	    xbmc.sleep(10000)
 			
 			
-    def directPlay(self, url, title, year, imdb, tvdb, season, episode, tvshowtitle, premiered, meta, id, name):
+    def directPlay(self, url, title, year, imdb, tvdb, season, episode, tvshowtitle, premiered, meta, id, name, clearlogo):
         try:
             debug('PLAY ITEM:', title, id)
 			
@@ -60,7 +62,7 @@ class sources:
             except: pass
 
             from resources.lib.modules.player import player
-            player().run(title, year, season, episode, imdb, tvdb, url, meta, id)
+            player().run(title, year, season, episode, imdb, tvdb, url, meta, id, clearlogo)
         except:
             pass
 			
