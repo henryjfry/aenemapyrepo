@@ -2,6 +2,7 @@
 
 from urlparse import parse_qsl
 import sys
+
 params = dict(parse_qsl(sys.argv[2].replace('?','')))
 
 action = params.get('action')
@@ -46,7 +47,13 @@ source = params.get('source')
 
 content = params.get('content')
 
+clearlogo = params.get('clearlogo')
+
 page = params.get('page')
+
+
+
+
 
 if action == None:
 	
@@ -68,12 +75,12 @@ elif action == 'browse_nav':
     navigator.navigator().browse_nav()
 	
 elif action == 'play':
-	from resources.lib.sources import sources	
-	sources().play(title, year, imdb, tvdb, season, episode, tvshowtitle, premiered, meta)
+	from resources.lib.sources import sources
+	sources().play(title, year, imdb, tvdb, season, episode, tvshowtitle, premiered, meta, clearlogo)
 	
 elif action == 'directPlay':
 	from resources.lib.sources import sources	
-	sources().directPlay(url, title, year, imdb, tvdb, season, episode, tvshowtitle, premiered, meta, id, name)
+	sources().directPlay(url, title, year, imdb, tvdb, season, episode, tvshowtitle, premiered, meta, id, name, clearlogo)
 
 elif action == 'authRealdebrid':
 	from resources.lib.modules import control	
