@@ -41,7 +41,7 @@ class player(xbmc.Player):
         xbmc.Player.__init__(self)
 
 
-    def run(self, title, year, season, episode, imdb, tvdb, url, meta, id):
+    def run(self, title, year, season, episode, imdb, tvdb, url, meta, id, clearlogo):
         try:
             control.sleep(200)
             self.autoResume       = control.setting('bookmarks.autoresume')
@@ -50,7 +50,7 @@ class player(xbmc.Player):
             self.next_episode = []			
             self.seekStatus = False
             infoMeta = False
-            self.filetype = 'unknown'
+            self.filetype = 'episode'
             self.watched          = False
 			
             self.totalTime = 0 ; self.currentTime = 0; self.lastProgress = 0
@@ -69,14 +69,22 @@ class player(xbmc.Player):
             elif self.content == 'episode' and tvdb != '0' and tvdb != None: 
 				self.filetype = 'episode'
 				infoMeta = True
+            elif self.content == 'episode': 
+				self.filetype = 'episode'
+				infoMeta = True
 				
-            else: infoMeta = False
+            else: 
+				self.content == 'episode'
+				self.filetype = 'episode'
+				infoMeta = True		
+#				infoMeta = False
 
 			
 		
             self.tvshowtitle = title
             self.title = title
             self.year = year
+	
 
             if infoMeta == True:
 				self.name = urllib.quote_plus(title) + urllib.quote_plus(' (%s)' % year) if self.content == 'movie' else urllib.quote_plus(title) + urllib.quote_plus(' S%02dE%02d' % (int(season), int(episode)))
@@ -92,6 +100,10 @@ class player(xbmc.Player):
 
             self.FileId = id
             self.imdb = imdb if not imdb == None else '0'
+            	
+#	    import xbmc
+#	    xbmc.log(str(imdb)+'===>REALIZER', level=xbmc.LOGNOTICE)
+
             self.tvdb = tvdb if not tvdb == None else '0'
             self.season = '%01d' % int(season) if self.content == 'episode' else None
             self.episode = '%01d' % int(episode) if self.content == 'episode' else None
@@ -106,11 +118,22 @@ class player(xbmc.Player):
 			
             item = control.item(path=url)
             self.infolabels = {"Title": title, "Plot": plot, "year": self.year}
+
+#	    if self.content == 'movie':
+#	    	self.infolabels = {"imdb": imdb, "IMDBNumber": imdb, "MovieID": imdb}	
+            self.infolabels = {"imdb": imdb, "IMDBNumber": imdb, "MovieID": imdb}	
+
             if self.content == 'episode' and infoMeta == True: self.infolabels.update({"season": meta['season'], "episode": meta['episode'], "tvshowtitle": meta['tvshowtitle'], "showtitle": meta['tvshowtitle'], "tvdb": self.tvdb})
+            else: self.infolabels.update(meta)
+
             self.original_meta = meta
 
-            if self.content == 'episode': item.setArt({'icon': thumb, 'thumb': fanart, 'poster': poster, 'fanart':fanart, 'tvshow.poster': poster, 'season.poster': thumb , 'tvshow.landscape':thumb})
-            else: item.setArt({'icon': thumb, 'thumb': thumb, 'poster': thumb, 'fanart':thumb})
+            if self.content == 'episode': item.setArt({'icon': thumb, 'thumb': fanart, 'poster': poster, 'fanart':fanart, 'tvshow.poster': poster, 'season.poster': thumb , 'tvshow.landscape':thumb, 'clearlogo': clearlogo})
+            else: item.setArt({'icon': thumb, 'thumb': thumb, 'poster': thumb, 'fanart':thumb, 'clearlogo': clearlogo})
+
+            if self.content == 'episode' and infoMeta == True: 
+                try: self.infolabels.update(meta)
+                except: pass
 
             item.setInfo(type='Video', infoLabels = self.infolabels)
 

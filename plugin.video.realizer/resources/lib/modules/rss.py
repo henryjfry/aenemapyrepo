@@ -127,7 +127,10 @@ def update():
 		
 		html = feedparser.parse(u)
 		rssEntries = html.entries
-		rssTitle = html['feed']['title']
+		try:
+		    rssTitle = html['feed']['title']
+		except:
+		    rssTitle = html['feed']
 
 		for item in rssEntries:
 			try:

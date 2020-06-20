@@ -212,8 +212,25 @@ def selectDialog(list, heading=addonInfo('name')):
 
 
 def moderator():
+
     netloc = [urlparse.urlparse(sys.argv[0]).netloc, '', 'plugin.video.realizer']
-    if not infoLabel('Container.PluginName') in netloc: sys.exit()
+#    xbmc.log(str(netloc)+'===>REALIZER_CONTROL', level=xbmc.LOGNOTICE)
+#    xbmc.log(str(infoLabel('Container.PluginName'))+'===>REALIZER_CONTROL', level=xbmc.LOGNOTICE)
+#    import xbmcgui
+#    xbmc.log(str(xbmcgui.getCurrentWindowDialogId())+'===>REALIZER_CONTROL', level=xbmc.LOGNOTICE)
+
+
+    import xbmcgui
+    curr_lock = xbmcgui.Window(10000).getProperty('REALIZER.ResolvedUrl')
+    player = xbmc.Player()
+    if player.isPlayingVideo()==1:
+	    sys.exit()
+    
+    if curr_lock == 'true':
+	xbmcgui.Window(10000).clearProperty('REALIZER.ResolvedUrl')
+	return
+    elif not infoLabel('Container.PluginName') in netloc: 
+	sys.exit()
 
 
 def metaFile():
