@@ -35,9 +35,10 @@ class sources:
 
             try: meta = json.loads(meta)
             except: pass
-
+	    xbmc.executebuiltin('ActivateWindow(busydialognocancel)')
             from resources.lib.modules.player import player
             player().run(title, year, season, episode, imdb, tvdb, url, meta, id, clearlogo)
+
 #	    xbmc.sleep(10000)
 			
 			
